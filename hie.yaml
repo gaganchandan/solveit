@@ -1,0 +1,13 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:solveit"
+
+    - path: "app/Main.hs"
+      component: "solveit:exe:solveit-exe"
+
+    - path: "app/Paths_solveit.hs"
+      component: "solveit:exe:solveit-exe"
+
+    - path: "test"
+      component: "solveit:test:solveit-test"
