@@ -1,3 +1,3 @@
 # solveit
 
-A basic SAT solver for propositional logic written in Haskell.
+A basic SAT solver for propositional logic based on DPLL.
