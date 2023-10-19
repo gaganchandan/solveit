@@ -37,6 +37,10 @@ library:
   source-dirs: src
   dependencies:
     - parsec
+    - containers
+  build-tools:
+    - alex
+    - happy
 
 executables:
   solveit-exe:

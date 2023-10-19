@@ -20,7 +20,27 @@
   (major1) == 4 && (major2) <  17 || \
   (major1) == 4 && (major2) == 17 && (minor) <= 2)
 #endif /* MIN_VERSION_base */
+/* package parsec-3.1.16.1 */
+#ifndef VERSION_parsec
+#define VERSION_parsec "3.1.16.1"
+#endif /* VERSION_parsec */
+#ifndef MIN_VERSION_parsec
+#define MIN_VERSION_parsec(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  1 || \
+  (major1) == 3 && (major2) == 1 && (minor) <= 16)
+#endif /* MIN_VERSION_parsec */
 
+/* tool alex-3.4.0.0 */
+#ifndef TOOL_VERSION_alex
+#define TOOL_VERSION_alex "3.4.0.0"
+#endif /* TOOL_VERSION_alex */
+#ifndef MIN_TOOL_VERSION_alex
+#define MIN_TOOL_VERSION_alex(major1,major2,minor) (\
+  (major1) <  3 || \
+  (major1) == 3 && (major2) <  4 || \
+  (major1) == 3 && (major2) == 4 && (minor) <= 0)
+#endif /* MIN_TOOL_VERSION_alex */
 /* tool cpphs-1.20.9 */
 #ifndef TOOL_VERSION_cpphs
 #define TOOL_VERSION_cpphs "1.20.9"
@@ -71,6 +91,16 @@
   (major1) == 2 && (major2) <  27 || \
   (major1) == 2 && (major2) == 27 && (minor) <= 0)
 #endif /* MIN_TOOL_VERSION_haddock */
+/* tool happy-1.20.1.1 */
+#ifndef TOOL_VERSION_happy
+#define TOOL_VERSION_happy "1.20.1.1"
+#endif /* TOOL_VERSION_happy */
+#ifndef MIN_TOOL_VERSION_happy
+#define MIN_TOOL_VERSION_happy(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  20 || \
+  (major1) == 1 && (major2) == 20 && (minor) <= 1)
+#endif /* MIN_TOOL_VERSION_happy */
 /* tool hpc-0.68 */
 #ifndef TOOL_VERSION_hpc
 #define TOOL_VERSION_hpc "0.68"
