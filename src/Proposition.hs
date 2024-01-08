@@ -36,3 +36,23 @@ toCNF :: Proposition -> Proposition
 toCNF expr = if updated == expr then expr else toCNF updated
   where
     updated = distribute (convertNegation expr)
+
+printProp :: Proposition -> IO ()
+printProp (Var x) = putStr x
+printProp (And p q) = do
+  putStr "("
+  printProp p
+  putStr " ∧ "
+  printProp q
+  putStr ")"
+printProp (Or p q) =
+  do
+    putStr "("
+    printProp p
+    putStr " ∨ "
+    printProp q
+    putStr ")"
+printProp (Not p) = do
+  putStr "~"
+  printProp p
+printProp (Constant b) = putStr (show b)

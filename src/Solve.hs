@@ -1,16 +1,18 @@
-module Solve (satisfiable, solve) where
+module Solve (satisfiable) where
 
 import Control.Applicative (Alternative ((<|>)))
-import Proposition (Proposition (..))
+import Data.Maybe (mapMaybe)
+import LiteralElim (literalElim)
+import Proposition (Proposition (..), toCNF)
 
-findFree :: Proposition -> Maybe [Char]
+findFree :: Proposition -> Maybe String
 findFree (Var v) = Just v
 findFree (And f1 f2) = findFree f1 <|> findFree f2
 findFree (Or f1 f2) = findFree f1 <|> findFree f2
 findFree (Not f) = findFree f
 findFree (Constant _) = Nothing
 
-guessVariable :: [Char] -> Bool -> Proposition -> Proposition
+guessVariable :: String -> Bool -> Proposition -> Proposition
 guessVariable v b (Var v') = if v == v' then Constant b else Var v'
 guessVariable v b (And f1 f2) = And (guessVariable v b f1) (guessVariable v b f2)
 guessVariable v b (Or f1 f2) = Or (guessVariable v b f1) (guessVariable v b f2)
@@ -45,41 +47,31 @@ simplify (Or f1 f2) =
 
 unConstant :: Proposition -> Bool
 unConstant (Constant b) = b
-unConstant _ = error "Not a Constant"
+unConstant _ = error "Not a Constant "
+
+unitClause :: Proposition -> Maybe (String, Bool)
+unitClause (Var v) = Just (v, True)
+unitClause (Not (Var v)) = Just (v, False)
+unitClause _ = Nothing
+
+getUnitClauses' :: Proposition -> [Proposition]
+getUnitClauses' (And p q) = getUnitClauses' p ++ getUnitClauses' q
+getUnitClauses' p = [p]
+
+getUnitClauses :: Proposition -> [(String, Bool)]
+getUnitClauses = mapMaybe unitClause . getUnitClauses'
+
+unitProp :: Proposition -> Proposition
+unitProp p = replaceAll p
+  where
+    assigments = getUnitClauses p
+    replaceAll = foldl (.) id (map (uncurry guessVariable) assigments)
 
 satisfiable :: Proposition -> Bool
-satisfiable f =
-  case findFree f of
-    Nothing -> unConstant f
+satisfiable p =
+  case findFree p' of
+    Nothing -> unConstant $ simplify p'
     Just v -> do
-      satisfiable (simplify $ guessVariable v True f) || satisfiable (simplify $ guessVariable v False f)
-
-printSol' :: [([Char], Bool)] -> IO ()
-printSol' [] = putStr ""
-printSol' [(v, b)] = do
-  putStr $ v ++ " = "
-  putStr $ show b
-printSol' ((v, b) : vs) = do
-  putStr $ v ++ " = "
-  putStr $ show b ++ ", "
-  printSol' vs
-
-printSol :: [([Char], Bool)] -> IO ()
-printSol sol = do
-  putStr "{"
-  printSol' sol
-  putStrLn "}"
-
-solve' :: Proposition -> [([Char], Bool)] -> IO ()
-solve' f vars =
-  case findFree f of
-    Nothing ->
-      if unConstant f
-        then printSol vars
-        else return ()
-    Just v -> do
-      solve' (simplify $ guessVariable v True f) ((v, True) : vars)
-      solve' (simplify $ guessVariable v False f) ((v, False) : vars)
-
-solve :: Proposition -> IO ()
-solve f = solve' f []
+      satisfiable (simplify $ guessVariable v True p) || satisfiable (simplify $ guessVariable v False p)
+  where
+    p' = literalElim $ toCNF $ unitProp p

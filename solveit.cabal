@@ -28,6 +28,7 @@ library
       LiteralElim
       Proposition
       Solve
+      UnitProp
   other-modules:
       Paths_solveit
   hs-source-dirs:
